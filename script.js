@@ -130,3 +130,44 @@ if (process.argv[2] === '--sort') {
   }
 }
 
+
+// Verificamos si el comando es --export-file
+if (process.argv[2] === '--export-file') {
+  const fileName = process.argv[3] || 'expenses.csv'; // Nombre del archivo, por defecto 'expenses.csv'
+
+  // Leer el archivo expenses.json
+  let expenses = [];
+  const data = fs.readFileSync('expenses.json', 'utf-8');
+  expenses = JSON.parse(data);
+
+  if (expenses.length === 0) {
+    console.log('⚠️ No hay gastos para exportar.');
+    process.exit(1);
+  }
+
+  // Crear las cabeceras del CSV
+  const headers = ['id', 'timestamp', 'concept', 'category', 'amount'];
+  
+  // Convertir los datos de expenses a formato CSV
+  const csvRows = [];
+  csvRows.push(headers.join(',')); // Añadir las cabeceras
+
+  for (const expense of expenses) {
+    const fecha = new Date(expense.timestamp * 1000).toLocaleDateString(); // Convertir timestamp a fecha legible
+    const row = [
+      expense.id,
+      fecha,
+      expense.concept,
+      expense.category,
+      expense.amount
+    ];
+    csvRows.push(row.join(','));
+  }
+
+  // Unir todo el contenido en un string
+  const csvContent = csvRows.join('\n');
+
+  // Escribir el archivo CSV
+  fs.writeFileSync(fileName, csvContent, 'utf-8');
+  console.log(`✅ Archivo CSV exportado con éxito: ${fileName}`);
+}

@@ -1,0 +1,8 @@
+id,timestamp,concept,category,amount
+2,4/25/2025,Weekly groceries,groceries,45.5
+3,4/26/2025,Bus ticket,transport,10
+4,4/27/2025,Movie night,entertainment,30
+5,4/28/2025,Coffee break,food,3.2
+6,4/30/2025,Flight Ticket,transport,299
+7,4/30/2025,Flight Ticket,transport,266
+8,4/30/2025,Flight Ticket,transport,255
