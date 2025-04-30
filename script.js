@@ -62,3 +62,39 @@ if (findIndex !== -1 && process.argv[findIndex + 1]) {
     console.log(`No expenses found with id = ${idToFind}`);
   }
 }
+
+if (process.argv[2] === '--add') {
+  const concept = process.argv[3];
+  const category = process.argv[4];
+  const amount = parseFloat(process.argv[5]);
+  
+
+
+  let expenses = [];
+const data = fs.readFileSync('expenses.json', 'utf-8');
+  expenses = JSON.parse(data);
+ 
+  const newExpense = {
+    id: expenses.length > 0 ? expenses[expenses.length - 1].id + 1 : 1,
+    timestamp: Math.floor(Date.now() / 1000),
+    concept: concept,
+    category: category,
+    amount: amount
+  };
+
+  // Añadir y guardar
+  expenses.push(newExpense);
+  fs.writeFileSync('expenses.json', JSON.stringify(expenses, null, 2));
+
+  console.log(' Gasto añadido con éxito:');
+  for (const expense of expenses) {
+    const fecha = new Date(expense.timestamp * 1000).toLocaleDateString();
+    console.log(`${expense.id} ${fecha} - ${expense.concept} - ${expense.category} - ${expense.amount}€`);
+  };
+}
+    
+if (process.argv[2] === '--delete') {
+
+
+  
+}
