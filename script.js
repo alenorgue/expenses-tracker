@@ -57,10 +57,6 @@ if (findIndex !== -1 && process.argv[findIndex + 1]) {
       break; // Terminamos el bucle porque ya lo encontramos
     }
   }
-
-  if (!found) {
-    console.log(`No expenses found with id = ${idToFind}`);
-  }
 }
 
 if (process.argv[2] === '--add') {
@@ -94,7 +90,43 @@ const data = fs.readFileSync('expenses.json', 'utf-8');
 }
     
 if (process.argv[2] === '--delete') {
+  const idToDelete = parseInt(process.argv[3]);
 
+  let expenses = [];
+  const data = fs.readFileSync('expenses.json', 'utf-8');
+  expenses = JSON.parse(data);
 
-  
+  const filteredExpenses = expenses.filter(expense => expense.id !== idToDelete);
+
+  fs.writeFileSync('expenses.json', JSON.stringify(filteredExpenses, null, 2));
+  console.log(`Expense with id = ${idToDelete} deleted.`);
+  for (const expense of filteredExpenses) {
+    const fecha = new Date(expense.timestamp * 1000).toLocaleDateString();
+    console.log(`${expense.id} ${fecha} - ${expense.concept} - ${expense.category} - ${expense.amount}€`);
+  }
 }
+
+if (process.argv[2] === '--sort') {
+  const sortOrder = process.argv[3]; // 'ASC' o 'DESC'
+
+  let expenses = [];
+  const data = fs.readFileSync('expenses.json', 'utf-8');
+  expenses = JSON.parse(data);
+
+  // Ordenar los gastos según el criterio
+  expenses.sort((a, b) => {
+    if (sortOrder === 'ASC') {
+      return a.amount - b.amount; // Orden ascendente por amount
+    } 
+    if (sortOrder === 'DESC') {
+      return b.amount - a.amount; // Orden descendente por amount
+    } 
+  });
+
+  console.log(`Sorted expenses (${sortOrder}):`);
+  for (const expense of expenses) {
+    const fecha = new Date(expense.timestamp * 1000).toLocaleDateString();
+    console.log(`${expense.id} ${fecha} - ${expense.concept} - ${expense.category} - ${expense.amount}€`);
+  }
+}
+
